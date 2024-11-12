@@ -1,0 +1,19 @@
+{
+  "name": "fif-backend-service",
+  "version": "1.0.0",
+  "description": "backend du projet de la fif",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Diomtiehoule/fif-backend-service.git"
+  },
+  "author": "Diom dev (merute)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Diomtiehoule/fif-backend-service/issues"
+  },
+  "homepage": "https://github.com/Diomtiehoule/fif-backend-service#readme"
+}

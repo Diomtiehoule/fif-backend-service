@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String?
+  email      String   @unique
+  phone      String?
+  password   String?
+  role_id    Int
+  role_name  String?
+  is_active  Boolean? @default(true)
+  status     Boolean? @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  role       Role     @relation(fields: [role_id], references: [id])
+  @@index([role_id], map: "user_role_id_fkey")
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  title      String
+  description String?
+  status     Boolean? @default(true)
+  user       User[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Election {
+  id             Int           @id @default(autoincrement())
+  date_time_start DateTime?
+  date_time_end   DateTime?
+  title          String?
+  content        String?
+  type_id        Int
+  statut         String?       @default("waiting") // coming, in progress, finished
+  type           String?        // public, private, mixt
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  is_active      Boolean?      @default(true)
+  bulletinVote   BulletinVote[]
+  candidat       Candidat[]
+  typeRelation   Type          @relation(fields: [type_id], references: [id])
+  @@index([type_id], map: "type_election_id_fkey")
+}
+
+model Type {
+  id          Int        @id @default(autoincrement())
+  name        String?
+  content     String?
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  elections   Election[]
+}
+
+model Candidat {
+  id          Int         @id @default(autoincrement())
+  name        String?
+  last_name   String?
+  phone       String?
+  birth_date  DateTime?
+  email       String?     @unique
+  bio         String?
+  election_id Int
+  created_at  DateTime?   @default(now())
+  updated_at  DateTime?   @updatedAt
+  is_active   Boolean?    @default(true)
+  bulletinVote BulletinVote[]
+  election     Election    @relation(fields: [election_id], references: [id])
+  @@index([election_id], map: "election_candidat_id_fkey")
+}
+
+model Votant {
+  id           Int         @id @default(autoincrement())
+  name         String?
+  last_name    String?
+  phone        String?
+  email        String?     @unique
+  categorie_id Int
+  created_at   DateTime?   @default(now())
+  updated_at   DateTime?   @updatedAt
+  is_active    Boolean?    @default(true)
+  bulletinVote BulletinVote[]
+  categorie    Categorie   @relation(fields: [categorie_id], references: [id])
+  @@index([categorie_id], map: "categorie_votant_id_fkey")
+}
+
+model Categorie {
+  id         Int       @id @default(autoincrement())
+  title      String?
+  content    String?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  votants    Votant[]
+}
+
+model BulletinVote {
+  id          Int        @id @default(autoincrement())
+  status      String?
+  code        String?
+  url_vote    String?
+  start_valid DateTime?
+  end_valid   DateTime?
+  election_id Int
+  candidat_id Int
+  votant_id   Int
+  is_active   Boolean?   @default(true)
+  created_at  DateTime?  @default(now())
+  updated_at  DateTime   @updatedAt
+
+  election    Election   @relation(fields: [election_id], references: [id])
+  @@index([election_id], map: "election_bulletin_id_fkey")
+
+  candidat    Candidat   @relation(fields: [candidat_id], references: [id])
+  @@index([candidat_id], map: "candidat_bulletin_id_fkey")
+
+  votant      Votant     @relation(fields: [votant_id], references: [id])
+  @@index([votant_id], map: "votant_bulletin_id_fkey")
+}

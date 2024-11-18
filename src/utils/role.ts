@@ -31,3 +31,19 @@ export const createDefaultType = async () => {
   }
   return;
 };
+
+export const createDefaultCategorie = async () => {
+  const categories = await db.categorie.findMany();
+  if (!categories.length) {
+    const categorie = await db.categorie.createMany({
+      data: [
+        { title: 'L1', content: 'Ligue 1' },
+        { title: 'L2', content: 'Ligue 2' },
+        { title: 'L3', content: 'Ligue 3' },
+      ],
+    });
+    console.log("categorie list created")
+    return categorie.count;
+  }
+  return;
+};

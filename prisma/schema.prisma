@@ -106,7 +106,7 @@ model Categorie {
 
 model BulletinVote {
   id          Int        @id @default(autoincrement())
-  status      String?
+  status      String?    // waiting done
   code        String?
   url_vote    String?
   start_valid DateTime?
